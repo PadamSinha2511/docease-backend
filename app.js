@@ -1,59 +1,28 @@
 const app = require("./index")
 const {connectToDb} = require("./config/db")
-
+const http = require("http")
+const socketIo = require("socket.io")
 connectToDb();
 
 
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:5173", // Replace with your frontend URL
+   
+  }
+});
 
-
-
-
-
-const server = app.listen(process.env.PORT,()=>{
-    console.log(`Server is running  at port ${process.env.PORT}`)
-})
-
-
-
-const io = require("socket.io")(server, {
-    pingTimeout: 60000,
-    cors: {
-      origin: "http://localhost:3000",
-      // credentials: true,
-    },
-  });
-
-io.on('connection',(socket)=>{
-    console.log("New Connection established")
-
-
+io.on('connection', (socket) => {
+  console.log('New client connected');
   
-       
-        socket.on("setup", (userData) => {
-          socket.join(userData._id);
-          socket.emit("connected");
-    })
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 
-    socket.on("join chat", (room) => {
-        socket.join(room);
-        console.log("User Joined Room: " + room);
-      });
+app.set('socketio', io); // Store io instance in app
 
-      socket.on("new message", (newMessageRecieved) => {
-        var chat = newMessageRecieved.chat;
-        // console.log(newMessageRecieved);
-        if (!chat.users) return console.log("chat.users not defined");
-    
-        chat.users.forEach((user) => {
-          if (user._id == newMessageRecieved.sender._id) return;
-    
-          socket.in(chat._id).emit("message recieved", newMessageRecieved);
-        });
-      });
-
-
-      socket.on("disconnect", (userData) => {
-        console.log("USER DISCONNECTED");
-        socket.leave(userData._id);
-      });
-})
+server.listen(process.env.PORT, () => {
+  console.log(`Server is running at ${process.env.PORT}`);
+});

@@ -40,6 +40,10 @@ const doctorSchema = new mongoose.Schema({
       experience: {
         type: Number,
         required: true,
+      },
+      role:{
+        type:String,
+        default:"doctor"
       }
 
 },{timestamps:true})
@@ -81,6 +85,7 @@ doctorSchema.static('matchPassword',async function(email,clientPassword){
         photo:user.photo,
         specialty:user.specialty,
         experience:user.experience,
+        role:user.role,
         // isAdmin:user.isAdmin,
         token
     }

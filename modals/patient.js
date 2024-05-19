@@ -36,6 +36,10 @@ const patientSchema = new mongoose.Schema({
         type:String,
         default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
     },
+    role:{
+      type:String,
+      default:"patient"
+    },
     forgotPasswordToken:{
         type:String,
     },
@@ -80,6 +84,7 @@ patientSchema.static('matchPassword',async function(email,clientPassword){
         name:user.name,
         _id:user._id,
         email:user.email,
+        role:user.role,
         // isAdmin:user.isAdmin,
         token
     }

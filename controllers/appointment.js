@@ -74,6 +74,29 @@ async function handleGetAllAppointmentForDoctor(req,res)
 
 }
 
+async function handleDecline(req,res){
+    const {id} = req.body;
+    const deleteAppt = await Appointment.findOneAndDelete({_id:id})
+    console.log(deleteAppt)
+    return res.status(200).json({success:true,msg:"Appointment delete successfully"})
+}
+
+async function handleAccept(req, res) {
+    const { id } = req.body;
+    const acceptAppt = await Appointment.findOneAndUpdate(
+      { _id: id },
+      { status: "confirmed" },
+      {new:true}
+    ).populate("doctorId").select("-salt");
+    
+    console.log(acceptAppt);
+  
+    const io = req.app.get('socketio');
+    io.emit('appointmentUpdated', acceptAppt); // Emit an event to all connected clients
+    
+    return res.status(200).json({ success: true, msg: "Appointment Confirmed" });
+  }
+  
 
 
 async function handleUpdateStatusNotes(req,res)
@@ -98,5 +121,7 @@ module.exports={
     handleAppointment,
     handleGetAllAppointments,
     handleGetAllAppointmentForPatient,
-    handleGetAllAppointmentForDoctor
+    handleGetAllAppointmentForDoctor,
+    handleDecline,
+    handleAccept
 }
