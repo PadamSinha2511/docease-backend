@@ -2,7 +2,7 @@ const Patient = require("../modals/patient")
 
 async function handleSignup(req,res)
 {
-    const {name,email,password,photo,phoneNumber,dateOfBirth,medicalHistory} = req.body;
+    const {name,email,password,photo,phoneNumber,age,medicalHistory} = req.body;
 
     const isUserPresent = await Patient.findOne({email})
 
@@ -18,7 +18,7 @@ async function handleSignup(req,res)
             email,
             password,
             phoneNumber,
-            dateOfBirth,
+            age,
             medicalHistory,
             photo
         })

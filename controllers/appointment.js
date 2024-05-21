@@ -99,17 +99,17 @@ async function handleAccept(req, res) {
   
 
 
-async function handleUpdateStatusNotes(req,res)
+async function handleUpdateStatus(req,res)
 {
-      const {appointmentId,notes} = req.body
+      const {id} = req.body
       
-        const isAppointment = await Appointment.findById(isAppointment);
+        const isAppointment = await Appointment.findById({_id:id});
         if(!isAppointment)
         {
             return res.status(400).json({success:false,msg:"Appointment id not found"})
         }
 
-      const appnt = await Appointment.findByIdAndUpdate(appointmentId,{status:"completed",notes:notes})
+      const appnt = await Appointment.findByIdAndUpdate({_id:id},{status:"completed"}).populate("doctorId").select("-salt")
     
       return res.status(200).json({success:true,msg:"Appoitmemt updated successfully"})
 
@@ -123,5 +123,6 @@ module.exports={
     handleGetAllAppointmentForPatient,
     handleGetAllAppointmentForDoctor,
     handleDecline,
-    handleAccept
+    handleAccept,
+    handleUpdateStatus
 }

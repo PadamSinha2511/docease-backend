@@ -23,6 +23,6 @@ io.on('connection', (socket) => {
 
 app.set('socketio', io); // Store io instance in app
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT,() => {
   console.log(`Server is running at ${process.env.PORT}`);
 });

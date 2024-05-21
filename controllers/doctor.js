@@ -41,10 +41,20 @@ async function handleSignIn(req,res)
     }
 }
 
-
+async function handleFetchAllDoc(req,res)
+{
+    try {
+        const allDocs = await Doctor.find().select("-salt");
+        return res.status(200).json({success:true,allDocs});
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({success:false,msg:"Server error to fetch doctors"})
+    }
+}
 
 module.exports={
     handleSignup,
     handleSignIn,
+    handleFetchAllDoc
  
 }

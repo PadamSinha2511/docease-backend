@@ -18,13 +18,14 @@ app.use(express.urlencoded({extended:true}));
 //cookie-parser and file upload
 app.use(cookieParser());
 app.use(cors({
-    origin:"http://localhost:5173"
+    origin:"*"
 }))
 //Routes
 
 const patientRoutes = require("./routes/patient")
 const doctorRoutes = require("./routes/doctor")
 const appointmentRoutes = require("./routes/appointment")
+
 
 
 app.use("/api/patient",patientRoutes)
